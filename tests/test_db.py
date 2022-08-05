@@ -5,9 +5,10 @@ from src.models import Temperature, Device
 from src.db_helpers import add_items_to_db
 
 def test_db_filename():
-    engine_repr = engine.__repr__().split('///')[-1]
-    engine_filename = engine_repr[:-1]
-    assert engine_filename == 'database.db.test'
+    engine_repr = engine.__repr__().split('///')
+    engine_filename = engine_repr[-1][:-1]
+    engine_filename_no_parameters = engine_filename.split('?')[0]
+    assert engine_filename_no_parameters == CONFIG.sqlite_file_name
 
 def test_add_items():
     new_temperature = Temperature(

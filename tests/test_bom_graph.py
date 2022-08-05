@@ -2,11 +2,11 @@ from datetime import datetime
 
 from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
-from src.bom_client import get_bom_data
+from src.bom_client import _get_bom_data
 from src.graphing import graph_n_days
 
 def test_bom_graph():
-    bom_data = get_bom_data(0)
+    bom_data = _get_bom_data(0)
     points = list(sorted(bom_data, key=lambda p: p.timestamp))
     devices = set(p.device_id for p in points)
     dataset = {
@@ -19,4 +19,4 @@ def test_bom_graph():
     graph = graph_n_days(dataset)
     with open(f'./tests/image_results/{__name__}.png', 'wb') as output:
         output.write(graph.getbuffer().tobytes())
-    assert 'image' != 'image' # lol
+    assert ('image' != 'image'), 'MANUALLY CHECK IMAGE OUTPUT'

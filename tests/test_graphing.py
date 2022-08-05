@@ -8,4 +8,4 @@ def test_graph_n_days():
     graph = graph_n_days(dataset)
     with open(f'./tests/image_results/{__name__}.png', 'wb') as output:
         output.write(graph.getbuffer().tobytes())
-    assert 'image' != 'image' # lol
+    assert ('image' != 'image'), 'MANUALLY CHECK IMAGE OUTPUT'
