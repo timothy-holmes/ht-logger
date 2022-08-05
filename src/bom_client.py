@@ -38,7 +38,8 @@ def get_last_bom_update(bom_device_id):
     #       add results to status check endpoint
     query = select(Temperature)
     query = query.where(Temperature.device_id == bom_device_id)
-    last_bom_update = max([t.timestamp for t in session.exec(query).all()] + [0])
+    results: list[Temperature] = session.exec(query).all()
+    last_bom_update = max([t.timestamp for t in results] + [0])
     return last_bom_update
 
 def _get_bom_data(from_when: float):

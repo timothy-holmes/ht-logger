@@ -17,7 +17,7 @@ def get_n_days(n_days,session):
     )
     query = select(Temperature)
     query = query.where(Temperature.timestamp > since_when)
-    results = session.exec(query.all())
+    results: list[Temperature] = session.exec(query).all()
     points = list(sorted(results, key=lambda p: p['timestamp']))
     devices = set(p.device_id for p in points)
     return {
