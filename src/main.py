@@ -12,7 +12,9 @@ from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
 
 app = FastAPI()
-engine = create_engine(CONFIG.sqlite_url)
+engine = create_engine(
+    CONFIG.sqlite_url + '?check_same_thread=False'  # hacky :(
+)
 session = Session(engine)
 
 # circular imports

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
-from src.bom_client import convert_bom_timestamp, get_bom_data, get_last_bom_update, update_bom_data
+from src.bom_client import convert_bom_timestamp, _get_bom_data, get_last_bom_update, update_bom_data
 
 def test_convert_bom_timestamp():
     now: datetime = datetime.now(CONFIG.tz)
@@ -17,7 +17,7 @@ def test_convert_bom_timestamp():
 
 def test_get_bom_data_all():
     now = datetime.timestamp(datetime.now(CONFIG.tz))
-    bom_data = get_bom_data(0)
+    bom_data = _get_bom_data(0)
     for result in bom_data:
         assert result.device_id == '087031_LAVERTON RAAF'
         assert result.temperature > -20 # realistic bounds
@@ -28,12 +28,12 @@ def test_get_bom_data_all():
 
 def test_get_bom_data_none():
     now = datetime.timestamp(datetime.now(CONFIG.tz)) + 3600
-    bom_data = get_bom_data(now)
+    bom_data = _get_bom_data(now)
     assert len(bom_data) == 0
 
 def test_get_bom_data_some():
     now = datetime.timestamp(datetime.now(CONFIG.tz)) - 12*3600
-    bom_data = get_bom_data(now)
+    bom_data = _get_bom_data(now)
     assert len(bom_data) < 24
     assert len(bom_data) > 0
 

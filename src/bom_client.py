@@ -26,7 +26,7 @@ def update_bom_data():
     bom_device_id = '087031_LAVERTON RAAF' # TODO: make multiple om sites config option
     last_bom_update = get_last_bom_update(bom_device_id)
     if last_bom_update + 108000 < timestamp_now: # more than 6 hours old
-        new_temperatures = get_bom_data(from_when = last_bom_update)
+        new_temperatures = _get_bom_data(from_when = last_bom_update)
         add_items_to_db(new_temperatures, session)
         return timestamp_now
     else:
@@ -41,7 +41,7 @@ def get_last_bom_update(bom_device_id):
     last_bom_update = max([t.timestamp for t in session.exec(query).all()] + [0])
     return last_bom_update
 
-def get_bom_data(from_when: float):
+def _get_bom_data(from_when: float):
     bom_station_obs_req = requests.get(
         url = CONFIG.bom_request_url,
         headers = CONFIG.bom_request_headers
