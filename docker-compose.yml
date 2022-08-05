@@ -5,7 +5,7 @@ services:
     build: .
     command: python ht-tracker.py
     ports:
-      - 192.168.1.103:8002:12345
+      - 192.168.1.103:8002:12346
     volumes:
       - type: bind
         source: ./data

@@ -11,7 +11,7 @@ from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
 from src.models import Temperature
 
-def get_n_days(n_days,session):
+async def get_n_days(n_days,session):
     since_when = datetime.timestamp(
         datetime.now(tz = CONFIG.tz) - timedelta(days=n_days)
     )
@@ -28,7 +28,7 @@ def get_n_days(n_days,session):
             for p in points if p.device_id == d]
             for d in devices}
 
-def graph_n_days(dataset: dict[str, list[dict]]):
+async def graph_n_days(dataset: dict[str, list[dict]]):
     """
     Graphs temperature history by device.
     

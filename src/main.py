@@ -50,7 +50,7 @@ async def check_status(debug: int = 0) -> str:
 
 @app.get("/last/{n_days}/days")
 async def show_last_3_days(n_days: float) -> Response:
-    dataset = get_n_days(n_days,session)
+    dataset = await get_n_days(n_days,session)
     return Response(
         content = await graph_n_days(dataset), 
         media_type = 'image/png'
