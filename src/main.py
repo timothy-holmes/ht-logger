@@ -5,7 +5,7 @@ from datetime import datetime
 
 from fastapi import FastAPI, Response
 from fastapi.responses import PlainTextResponse
-from sqlmodel import create_engine, Session
+from sqlmodel import create_engine, Session, select
 import uvicorn
 
 from src.config import config as CONFIG
@@ -56,6 +56,14 @@ async def show_last_3_days(n_days: float) -> Response:
     return Response(
         content = (await graph_n_days(dataset)).read(), 
         media_type = 'image/png'
+    )
+
+# debugging only
+@app.get("/db_dump")
+async def db_dump():
+    return json.dumps(
+        session.exec(select(Temperature)).all(),
+        indent = 4
     )
 
 def startup():
