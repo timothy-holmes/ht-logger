@@ -46,8 +46,8 @@ async def check_status(debug: int = 0) -> str:
     """Convience endpoint for confirming this app is operating. Returns sample string and datetime for now. """
     return json.dumps({
         'message': 'This message is evidence the app is running!',
-        'datetime': bool(debug) or str(datetime.now()), # returns 1 if debug for testing 
-        'last_bom_update': datetime.fromtimestamp(update_bom_data())
+        'datetime': bool(debug) or str(datetime.now(tz=CONFIG.tz)), # returns 1 if debug for testing 
+        'last_bom_update': str(datetime.fromtimestamp(update_bom_data(), tz=CONFIG.tz))
     }, indent = 4)
 
 @app.get("/last/{n_days}/days")
