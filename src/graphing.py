@@ -13,7 +13,7 @@ from src.models import Temperature
 
 def get_n_days(n_days,session):
     since_when = datetime.timestamp(
-        datetime.now(tzinfo=CONFIG.tz) - timedelta(days=n_days)
+        datetime.now(tz = CONFIG.tz) - timedelta(days=n_days)
     )
     query = select(Temperature)
     query = query.where(Temperature.timestamp > since_when)
