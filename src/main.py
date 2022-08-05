@@ -47,11 +47,11 @@ async def check_status(debug: int = 0) -> str:
     return json.dumps({
         'message': 'This message is evidence the app is running!',
         'datetime': bool(debug) or str(datetime.now()) # returns 1 if debug for testing 
+        'last_bom_update': update_bom_data()
     }, indent = 4)
 
 @app.get("/last/{n_days}/days")
 async def show_last_3_days(n_days: float) -> Response:
-    last_bom_update = update_bom_data()
     dataset = await get_n_days(n_days,session)
     return Response(
         content = (await graph_n_days(dataset)).read(), 
