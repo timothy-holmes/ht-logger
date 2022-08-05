@@ -27,6 +27,10 @@ Test app
 
 Configure webhook on Shelly H&T device
 
-Wait for the requests (droids) you're looking for...
+Wait for the requests (droids) you're looking for... While waiting view chart on iDevice (or similar) here [http://192.168.1.103:8002/last/3/days/]. Should show the last 3 days of BOM data.
 
-View chart on iDevice (or similar) here [http://192.168.1.103:8002/last/3/days/]
+## misc TODOs:
+
+- add trailing \n to 'json' responses
+- check docker-compose command in readme, add option to print to console nicely
+- write more tests. eg. get_n_days() - got error
