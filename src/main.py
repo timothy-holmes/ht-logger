@@ -8,45 +8,49 @@ from fastapi.responses import PlainTextResponse
 from sqlmodel import create_engine, Session
 import uvicorn
 
-from config import config as CONFIG
-from models import Temperature, add_items, create_db_and_tables
-from bom_client import update_bom_data
-from graphing import graph_n_days
+from src.config import config as CONFIG
+print(__name__,CONFIG.sqlite_file_name)
 
 app = FastAPI()
-engine = create_engine(CONFIG['sqlite_url'])
+engine = create_engine(CONFIG.sqlite_url)
 session = Session(engine)
 
-last_bom_update = 0
+# circular imports
+from src.models import Temperature
+from src.bom_client import update_bom_data
+from src.graphing import get_n_days, graph_n_days
+from src.db_helpers import add_items_to_db, create_db_and_tables
 
 @app.get("/consume", response_class = PlainTextResponse)
-async def consume_webhook(hum: int, temp: float, id: str) -> Temperature:
-    timestamp = datetime.timestamp(datetime.now(tz=CONFIG['tz']))
+async def consume_webhook(hum: int, temp: float, id: str) -> str:
+    timestamp = datetime.timestamp(datetime.now(tz=CONFIG.tz))
     new_temperature = Temperature(
         timestamp = timestamp,
         humidity = hum,
         temperature = temp,
         device_id = id
     )
-    await add_items([new_temperature],session)
-    last_bom_update = update_bom_data(last_bom_update,session)
+    await add_items_to_db([new_temperature],session)
+    last_bom_update = update_bom_data()
     return json.dumps({
         'message': 'Success',
-        'timestamp': int(timestamp)
+        'timestamp': int(timestamp),
+        'last_bom_update': last_bom_update
     },indent = 4)
 
 @app.get("/status/{debug}", response_class = PlainTextResponse)
-async def check_status(debug: int) -> dict:
+async def check_status(debug: int = 0) -> str:
     """Convience endpoint for confirming this app is operating. Returns sample string and datetime for now. """
     return json.dumps({
         'message': 'This message is evidence the app is running!',
-        'datetime': bool(debug) or str(datetime.datetime.now()) # returns 1 if debug for testing 
+        'datetime': bool(debug) or str(datetime.now()) # returns 1 if debug for testing 
     }, indent = 4)
 
 @app.get("/last/{n_days}/days")
-async def show_last_3_days(n_days: float):
+async def show_last_3_days(n_days: float) -> Response:
+    dataset = get_n_days(n_days,session)
     return Response(
-        content = await graph_n_days(n=n_days), 
+        content = await graph_n_days(dataset), 
         media_type = 'image/png'
     )
 
