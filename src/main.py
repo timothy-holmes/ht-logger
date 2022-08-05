@@ -41,6 +41,7 @@ async def consume_webhook(hum: int, temp: float, id: str) -> str:
     },indent = 4)
 
 @app.get("/status/{debug}", response_class = PlainTextResponse)
+@app.get("/status", response_class = PlainTextResponse)
 async def check_status(debug: int = 0) -> str:
     """Convience endpoint for confirming this app is operating. Returns sample string and datetime for now. """
     return json.dumps({
@@ -52,7 +53,7 @@ async def check_status(debug: int = 0) -> str:
 async def show_last_3_days(n_days: float) -> Response:
     dataset = await get_n_days(n_days,session)
     return Response(
-        content = await graph_n_days(dataset), 
+        content = await graph_n_days(dataset).read(), 
         media_type = 'image/png'
     )
 

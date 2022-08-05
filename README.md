@@ -33,4 +33,5 @@ Wait for the requests (droids) you're looking for... While waiting view chart on
 
 - add trailing \n to 'json' responses
 - check docker-compose command in readme, add option to print to console nicely
-- write more tests. eg. get_n_days() - got error
+- write more tests. eg. get_n_days() - got error, endpoints
+- 
