@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  requestrecord:
+  app:
     build: .
     command: python ht-tracker.py
     ports:
