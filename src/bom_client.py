@@ -2,7 +2,7 @@ import requests
 from datetime import datetime
 from requests import HTTPError
 
-from sqlmodel import select, Session
+from sqlmodel import select
 
 from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
@@ -23,7 +23,7 @@ def convert_bom_timestamp(bom_timestamp: str):
 
 def update_bom_data():
     timestamp_now = datetime.timestamp(datetime.now(CONFIG.tz))
-    bom_device_id = '087031_LAVERTON RAAF' # TODO: make config option
+    bom_device_id = '087031_LAVERTON RAAF' # TODO: make multiple om sites config option
     last_bom_update = get_last_bom_update(bom_device_id)
     if last_bom_update + 108000 < timestamp_now: # more than 6 hours old
         new_temperatures = get_bom_data(from_when = last_bom_update)
@@ -33,6 +33,9 @@ def update_bom_data():
         return last_bom_update
 
 def get_last_bom_update(bom_device_id):
+    # TODO: generalise this function (not just bom devices)
+    #       more to db_helpers.py
+    #       add results to status check endpoint
     query = select(Temperature)
     query = query.where(Temperature.device_id == bom_device_id)
     last_bom_update = max([t.timestamp for t in session.exec(query).all()] + [0])

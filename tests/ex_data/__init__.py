@@ -23,9 +23,16 @@ pickled_urls = {
     'http://www.bom.gov.au/fwo/IDV60801/IDV60801.94865.json': './tests/ex_data/bom_req.pickle'
 }
 
-def pickled_request(url: str):
-    if filename := pickled_urls.get(url,None):
+def pickled_request(url: str = None, filename: str = None):
+    if not filename:
+        filename = pickled_urls.get(url,None)
+    if filename:
         with open(filename, 'rb') as rick:
             return pickle.load(rick)
     else:
         return None
+
+if __name__ == '__main__':
+    req = pickled_request(url='http://www.bom.gov.au/fwo/IDV60801/IDV60801.94865.json')
+    data = req.json().get('observations',{}).get('data',{})
+    print('\n'.join(ob['local_date_time_full'] for ob in data))

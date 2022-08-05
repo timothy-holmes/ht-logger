@@ -4,7 +4,7 @@ from zoneinfo import ZoneInfo
 # don't put any src.* imports should be here 
 
 class Config:
-    sqlite_file_name: str = "database.db"
+    sqlite_file_name: str = "./data/database.db"
     tz: tzinfo = ZoneInfo("Australia/Melbourne")
     sqlite_url: str = f"sqlite:///{sqlite_file_name}"
     bom_request_headers: dict[str, str] = {

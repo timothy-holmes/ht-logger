@@ -17,6 +17,6 @@ def test_bom_graph():
             for p in points if p.device_id == d]
             for d in devices}
     graph = graph_n_days(dataset)
-    with open(f'tests/image_results/{__name__}.png', 'wb') as output:
+    with open(f'./tests/image_results/{__name__}.png', 'wb') as output:
         output.write(graph.getbuffer().tobytes())
     assert 'image' != 'image' # lol
