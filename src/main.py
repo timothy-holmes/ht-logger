@@ -56,11 +56,6 @@ async def show_last_3_days(n_days: float) -> Response:
         media_type = 'image/png'
     )
 
-if __name__ == '__main__':
+def startup():
     create_db_and_tables(engine)
-    uvicorn.run(
-        "main:app", 
-        host = '0.0.0.0', 
-        port=12345, 
-        log_level="info"
-    )
+    # check_for_old_data
