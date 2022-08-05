@@ -53,7 +53,7 @@ async def check_status(debug: int = 0) -> str:
 async def show_last_3_days(n_days: float) -> Response:
     dataset = await get_n_days(n_days,session)
     return Response(
-        content = await graph_n_days(dataset).read(), 
+        content = (await graph_n_days(dataset)).read(), 
         media_type = 'image/png'
     )
 

@@ -23,7 +23,7 @@ pickled_urls = {
     'http://www.bom.gov.au/fwo/IDV60801/IDV60801.94865.json': './tests/ex_data/bom_req.pickle'
 }
 
-def pickled_request(url: str = None, filename: str = None):
+def pickled_request(url: str = '', filename: str = None):
     if not filename:
         filename = pickled_urls.get(url,None)
     if filename:
