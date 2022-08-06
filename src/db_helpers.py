@@ -30,19 +30,21 @@ def add_old_data_to_db(engine):
         file_path = join(old_data_path, file)
         with open(file_path,'r') as json_file:
             data = json.load(json_file)
-        url_params = data['query_string']
-        details_list = url_params.split('&')
-        detail_pairs_list = {p.split('=')[0]: p.split('=')[1]
-                             for p in details_list}
-        temperatures.append(
-            Temperature(
-                device_id = detail_pairs_list['id'],
-                humidity = int(detail_pairs_list['hum']),
-                temperature = float(detail_pairs_list['temp']),
-                timestamp = datestamp
-            )
-        )
-        # os.rename(file_path, file_path + '.bak')
+        url_params = data.get('query_string','')
+        if url_params:
+            details_list = url_params.split('&')
+            detail_pairs_list = {p.split('=')[0]: p.split('=')[1]
+                                for p in details_list}
+            if all(x in detail_pairs_list.keys() for x in ['hum','id','temp']):
+                temperatures.append(
+                    Temperature(
+                        device_id = detail_pairs_list['id'],
+                        humidity = int(detail_pairs_list['hum']),
+                        temperature = float(detail_pairs_list['temp']),
+                        timestamp = datestamp
+                    )
+                )
+        os.rename(file_path, file_path + '.bak')
     add_items_to_db(temperatures,engine)
    
 def add_items_to_db(items,engine) -> bool:
