@@ -67,5 +67,6 @@ async def db_dump():
     )
 
 def startup():
+    print(engine)
     create_db_and_tables(engine)
     # check_for_old_data
