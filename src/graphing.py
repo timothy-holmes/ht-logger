@@ -23,7 +23,7 @@ async def get_n_days(n_days,engine):
     devices = set(p.device_id for p in points)
     return {
         d: [{
-                'd': int(datetime.fromtimestamp(p.timestamp)) / 86400, # convert from seconds to days
+                'd': p.timestamp / 86400, # convert from seconds to days
                 't': p.temperature
             }
             for p in points if p.device_id == d]
