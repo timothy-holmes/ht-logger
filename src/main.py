@@ -19,7 +19,7 @@ engine = create_engine(
 from src.models import Temperature
 from src.bom_client import update_bom_data
 from src.graphing import get_n_days, graph_n_days
-from src.db_helpers import add_items_to_db, create_db_and_tables
+from src.db_helpers import add_items_to_db, create_db_and_tables, add_old_data_to_db
 
 @app.get("/consume", response_class = PlainTextResponse)
 async def consume_webhook(hum: int, temp: float, id: str) -> str:
@@ -30,7 +30,7 @@ async def consume_webhook(hum: int, temp: float, id: str) -> str:
         temperature = temp,
         device_id = id
     )
-    await add_items_to_db([new_temperature],engine)
+    add_items_to_db([new_temperature],engine)
     last_bom_update = update_bom_data()
     return json.dumps({
         'message': 'Success',
@@ -68,4 +68,4 @@ async def db_dump():
 def startup():
     print(engine)
     create_db_and_tables(engine)
-    # check_for_old_data
+    add_old_data_to_db(engine)
