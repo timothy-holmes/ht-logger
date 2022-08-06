@@ -5,7 +5,7 @@ from io import BytesIO
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from sqlmodel import select
+from sqlmodel import select, Session
 
 from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)

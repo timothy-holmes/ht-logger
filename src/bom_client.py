@@ -27,6 +27,7 @@ def update_bom_data():
     last_bom_update = get_last_bom_update(bom_device_id)
     if last_bom_update + 108000 < timestamp_now: # more than 6 hours old
         new_temperatures = _get_bom_data(from_when = last_bom_update)
+        print(f'{last_bom_update=},{new_temperatures=},{engine=}')
         add_items_to_db(new_temperatures, engine)
         return timestamp_now
     else:
