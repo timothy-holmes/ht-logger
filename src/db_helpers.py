@@ -12,7 +12,7 @@ def create_db_and_tables(engine) -> None:
 #                  if isfile(join(mypath, f))]
 #     for file in onlyfiles:
 
-async def add_items_to_db(items,engine) -> bool:
+def add_items_to_db(items,engine) -> bool:
     with Session(engine) as session:
         for item in items:
             session.add(item)
