@@ -2,12 +2,12 @@ import requests
 from datetime import datetime
 from requests import HTTPError
 
-from sqlmodel import select
+from sqlmodel import select, Session
 
 from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
 from src.models import Temperature
-from src.main import session
+from src.main import engine
 from src.db_helpers import add_items_to_db
 
 def convert_bom_timestamp(bom_timestamp: str):
@@ -27,7 +27,7 @@ def update_bom_data():
     last_bom_update = get_last_bom_update(bom_device_id)
     if last_bom_update + 108000 < timestamp_now: # more than 6 hours old
         new_temperatures = _get_bom_data(from_when = last_bom_update)
-        add_items_to_db(new_temperatures, session)
+        add_items_to_db(new_temperatures, engine)
         return timestamp_now
     else:
         return last_bom_update
@@ -38,7 +38,8 @@ def get_last_bom_update(bom_device_id):
     #       add results to status check endpoint
     query = select(Temperature)
     query = query.where(Temperature.device_id == bom_device_id)
-    results: list[Temperature] = session.exec(query).all()
+    with Session(engine) as session:
+        results: list[Temperature] = session.exec(query).all()
     last_bom_update = max([t.timestamp for t in results] + [0])
     return last_bom_update
 

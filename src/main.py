@@ -6,7 +6,6 @@ from datetime import datetime
 from fastapi import FastAPI, Response
 from fastapi.responses import PlainTextResponse
 from sqlmodel import create_engine, Session, select
-import uvicorn
 
 from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
@@ -15,7 +14,6 @@ app = FastAPI()
 engine = create_engine(
     CONFIG.sqlite_url + '?check_same_thread=False'  # hacky :(
 )
-session = Session(engine)
 
 # circular imports
 from src.models import Temperature
@@ -32,7 +30,7 @@ async def consume_webhook(hum: int, temp: float, id: str) -> str:
         temperature = temp,
         device_id = id
     )
-    await add_items_to_db([new_temperature],session)
+    await add_items_to_db([new_temperature],engine)
     last_bom_update = update_bom_data()
     return json.dumps({
         'message': 'Success',
@@ -52,7 +50,7 @@ async def check_status(debug: int = 0) -> str:
 
 @app.get("/last/{n_days}/days")
 async def show_last_3_days(n_days: float) -> Response:
-    dataset = await get_n_days(n_days,session)
+    dataset = await get_n_days(n_days,engine)
     return Response(
         content = (await graph_n_days(dataset)).read(), 
         media_type = 'image/png'
@@ -61,10 +59,11 @@ async def show_last_3_days(n_days: float) -> Response:
 # debugging only
 @app.get("/db_dump")
 async def db_dump():
-    return json.dumps(
-        session.exec(select(Temperature)).all(),
-        indent = 4
-    )
+    with Session(engine) as session:
+        return json.dumps(
+            session.exec(select(Temperature)).all(),
+            indent = 4
+        )
 
 def startup():
     print(engine)

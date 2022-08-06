@@ -1,7 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Session
 
 def create_db_and_tables(engine) -> None:
     SQLModel.metadata.create_all(engine)
@@ -12,8 +12,9 @@ def create_db_and_tables(engine) -> None:
 #                  if isfile(join(mypath, f))]
 #     for file in onlyfiles:
 
-async def add_items_to_db(items,session) -> bool:
-    for item in items:
-        session.add(item)
-    session.commit()
+async def add_items_to_db(items,engine) -> bool:
+    with Session(engine) as session:
+        for item in items:
+            session.add(item)
+        session.commit()
     return True

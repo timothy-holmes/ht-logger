@@ -11,13 +11,14 @@ from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
 from src.models import Temperature
 
-async def get_n_days(n_days,session):
+async def get_n_days(n_days,engine):
     since_when = datetime.timestamp(
         datetime.now(tz = CONFIG.tz) - timedelta(days=n_days)
     )
     query = select(Temperature)
     query = query.where(Temperature.timestamp > since_when)
-    results: list[Temperature] = session.exec(query).all()
+    with Session(engine) as session:
+        results: list[Temperature] = session.exec(query).all()
     points = list(sorted(results, key=lambda p: p['timestamp']))
     devices = set(p.device_id for p in points)
     return {
