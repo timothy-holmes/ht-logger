@@ -16,5 +16,6 @@ async def add_items_to_db(items,engine) -> bool:
     with Session(engine) as session:
         for item in items:
             session.add(item)
+            print(item)
         session.commit()
     return True
