@@ -57,7 +57,7 @@ async def show_last_3_days(n_days: float) -> Response:
     )
 
 # debugging only
-@app.get("/db_dump")
+@app.get("/db_dump", response_class = PlainTextResponse)
 async def db_dump():
     with Session(engine) as session:
         return json.dumps(

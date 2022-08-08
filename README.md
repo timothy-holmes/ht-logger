@@ -1,4 +1,5 @@
 # ht-logger
+
 Consumes webhooks from my baby's room humidity and temperature IoT device (Shelly H&amp;T) and stores in sqlite db.
 
 ## To use, follow these steps
@@ -29,8 +30,21 @@ Configure webhook on Shelly H&T device
 
 Wait for the requests (droids) you're looking for... While waiting view chart on iDevice (or similar) here [http://192.168.1.103:8002/last/3/days/]. Should show the last 3 days of BOM data.
 
-## misc TODOs:
+## misc TODOs
 
-- add trailing \n to 'json' responses
-- check docker-compose command in readme, add option to print to console nicely
+- error visibility through daily email of errors and exceptions
+  - logging exceptions and errors
 - write more tests. eg. get_n_days() - got error, endpoints
+- do a better job managing multiple devices
+  - status check query for all devices
+  - device metrics (number of check-in)
+  - enable multiple BOM stations by getting device list before updating
+    - eg. Laverton, Olympic Park, Hobart
+- reduce time between BOM updates to 3 hours
+- graphing
+  - add value labels to last points for each series
+  - add gridlines
+  - add value labels to graph for local minima/maxima
+- controller for smart power point
+  - turn on, turn off thresholds/rule manager
+  - maybe a new system for managing ops devices
