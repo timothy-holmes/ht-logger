@@ -1,5 +1,4 @@
 from typing import Iterator
-from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
 from io import BytesIO
 
@@ -11,7 +10,7 @@ from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
 from src.models import Temperature
 
-async def get_n_days(n_days,engine) -> dict[str, dict[str ,int | float]]:
+async def get_n_days(n_days,engine) -> dict[str, dict[str, int | float]]:
     """
     Queries and formats data from Temperature table for graphing.
 
