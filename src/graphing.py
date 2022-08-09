@@ -11,7 +11,18 @@ from src.config import config as CONFIG
 print(__name__,CONFIG.sqlite_file_name)
 from src.models import Temperature
 
-async def get_n_days(n_days,engine):
+async def get_n_days(n_days,engine) -> dict[str, dict[str ,int | float]]:
+    """
+    Queries and formats data from Temperature table for graphing.
+
+    Features:
+    - retrieves all temperature data and groups by device_id
+    - formats data for plotting, including timestamp seconds to days since-epoch
+
+    Parameters:
+    - n_days: data period, `n_days` days to now
+    """
+
     since_when = datetime.timestamp(
         datetime.now(tz = CONFIG.tz) - timedelta(days=n_days)
     )
@@ -70,8 +81,8 @@ async def graph_n_days(dataset: dict[str, list[dict]]):
     ax.set_xlabel('date-time')    
     ax.set_ylabel('temperature')    
     ax.tick_params(axis='x', labelrotation=40)    
-    locator = mdates.AutoDateLocator()
-    formatter = mdates.ConciseDateFormatter(locator)
+    locator = mdates.AutoDateLocator(tz = CONFIG.tz)
+    formatter = mdates.ConciseDateFormatter(locator, tz = CONFIG.tz)
     ax.xaxis.set_major_locator(locator)
     ax.xaxis.set_major_formatter(formatter)
     ax.legend()
