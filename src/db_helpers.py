@@ -1,15 +1,25 @@
-import os
+import os, json
 from os.path import isfile, join
 from datetime import datetime
-import json
+from typing import Optional
 
-from sqlmodel import SQLModel, Session
+from sqlmodel import Session, select
 from src.config import config as CONFIG
-from src.models import Temperature
+from src.models import Temperature, Device
 
-def create_db_and_tables(engine) -> None:
-    SQLModel.metadata.create_all(engine)
+# def db_engine():
+    # yield engine
 
+# def migrate():
+
+def add_items_to_db(items,engine) -> bool:
+    with Session(engine) as session:
+        for item in items:
+            session.add(item)
+            print(item)
+        session.commit()
+    return True
+    
 def add_old_data_to_db(engine):
     temperatures = []
     old_data_path = '/data/old_data'
@@ -46,11 +56,18 @@ def add_old_data_to_db(engine):
                 )
         os.rename(file_path, file_path + '.bak')
     add_items_to_db(temperatures,engine)
-   
-def add_items_to_db(items,engine) -> bool:
+
+def get_last_update(device_id: str, engine) -> float:
+    query = select(Temperature)
+    query = query.where(Temperature.device_id == device_id)
     with Session(engine) as session:
-        for item in items:
-            session.add(item)
-            print(item)
-        session.commit()
-    return True
+        results: list[Temperature] = session.exec(query).all()
+    return max([t.timestamp for t in results] + [0])
+
+def get_last_updates(engine, device_type: Optional[str]) -> dict[str, float]:
+    query = select(Device) # limit to device_id column only
+    if device_type:
+        query = query.where(Device.device_type == device_type)
+    with Session(engine) as session:
+        results: list[Device] = session.exec(query).all()
+    return {d.device_id: get_last_update(d.device_id) for d in results}

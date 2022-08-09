@@ -1,4 +1,3 @@
-from math import inf
 from typing import Optional
 from datetime import datetime
 from sqlmodel import Field, SQLModel
@@ -17,6 +16,5 @@ class Device(SQLModel, table=True):
     id: int = Field(default=None, primary_key = True)
     device_id: str
     friendly_name: str
-    start_timestamp: Optional[float] = 0
-    end_timestamp: Optional[float] = inf
-
+    device_type: str # 'shelly' or 'bom_station'
+    device_url: Optional[str]
