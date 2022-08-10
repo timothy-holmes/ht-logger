@@ -30,6 +30,28 @@ Configure webhook on Shelly H&T device
 
 Wait for the requests (droids) you're looking for... While waiting view chart on iDevice (or similar) here [http://192.168.1.103:8002/last/3/days/]. Should show the last 3 days of BOM data.
 
+## next TODO
+
+- DevOps!
+  - stop adding features!
+  - create 'working' version for current app
+    - create a test configuration that works on Windows
+      - draw process/architecture diagram
+      - database.db.test with sample data
+      - tests for more things
+      - fix things until working
+  - create automated testing environment for Linux
+    - docker-compose
+      - services
+        - cron pulls latest commit from main git branch
+          - runs tests
+          - generates migration script
+          - moves tested source code into app /src volume
+          - app uvicorn reloads with new source code and runs migration
+        - production app
+
+
+
 ## misc TODOs
 
 - error visibility through daily email of errors and exceptions
