@@ -5,6 +5,7 @@ print(__name__,CONFIG.sqlite_file_name)
 from src.bom_client import _get_bom_data
 from src.graphing import graph_n_days
 
+# delete this test if it fails
 def test_bom_graph():
     bom_data = _get_bom_data(0)
     points = list(sorted(bom_data, key=lambda p: p.timestamp))

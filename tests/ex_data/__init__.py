@@ -1,38 +1,38 @@
-import pickle
+import pickle, requests
+from datetime import datetime
 
-for_graph = {
-    "bom_data": [
-        {"d": 19208.19607638889,"t": 10.0},
-        {"d": 19208.198391203703,"t": 11.0},
-        {"d": 19208.206493055557, "t": 12.0},
-        {"d": 19208.199548611112,"t": 13.0},
-        {"d": 19208.20417824074,"t": 14.0}
-    ],
-    "shelly_h&t": [
-        {"d": 19208.196087962962,"t": 9.0},
-        {"d": 19208.198402777776,"t": 10.0},
-        {"d": 19208.21650462963,"t": 11.0},
-        {"d": 19208.199560185185,"t": 12.0},
-        {"d": 19208.204189814816,"t": 13.0}
-    ]
-}
+from tests.config import test_config as CONFIG # same as src.cofig:config as CONFIG
+print(__name__,CONFIG.sqlite_url)
 
-consume_url = '/consume?hum=70&temp=20.0&id=shellyht-test'
+def pickled_request(url: str):
+    with open('./tests/ex_data/req_pickles.pickle','rb') as rick:
+        request_d: dict = pickle.load(rick)
+        if result := request_d['data'].get(url, None):
+            result = pickle.loads(result)
+    return result or requests.get(url=url,headers=CONFIG.bom_request_headers)
 
-pickled_urls = {
-    'http://www.bom.gov.au/fwo/IDV60801/IDV60801.94865.json': './tests/ex_data/bom_req.pickle'
-}
+def repickle_urls():
+    try:
+        with open('./tests/ex_data/req_pickles.pickle','rb') as pickle_file:
+            pickle_d: dict = pickle.load(pickle_file)
+        if datetime.fromtimestamp(pickle_d['last_updated']) > datetime.timestamp(datetime.today()):
+            return None
+    except FileNotFoundError:
+        pickle_d = {
+            'data': {
+                'http://www.bom.gov.au/fwo/IDT60901/IDT60901.94970.json': None,
+                'http://www.bom.gov.au/fwo/IDV60801/IDV60801.94865.json': None
+            }
+        }
+    pickle_d['last_updated'] = int(datetime.timestamp(datetime.now(tz=CONFIG.tz))),
+    for url in pickle_d['data'].keys():
+        req = pickle.dumps(requests.get(url=url,headers=CONFIG.bom_request_headers))
+        pickle_d['data'][url] = req
+    with open('./tests/ex_data/req_pickles.pickle','wb') as pickle_file:
+        pickle.dump(pickle_d,pickle_file)
 
-def pickled_request(url: str = '', filename: str = None):
-    if not filename:
-        filename = pickled_urls.get(url,None)
-    if filename:
-        with open(filename, 'rb') as rick:
-            return pickle.load(rick)
-    else:
-        return None
-
-if __name__ == '__main__':
+def run_pickle_test():
+    repickle_urls()
     req = pickled_request(url='http://www.bom.gov.au/fwo/IDV60801/IDV60801.94865.json')
     data = req.json().get('observations',{}).get('data',{})
     print('\n'.join(ob['local_date_time_full'] for ob in data))

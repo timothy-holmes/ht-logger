@@ -8,11 +8,11 @@ from fastapi.responses import PlainTextResponse
 from sqlmodel import create_engine, Session, select
 
 from src.config import config as CONFIG
-print(__name__,CONFIG.sqlite_file_name)
+print(__name__,CONFIG.sqlite_url)
 
 app = FastAPI()
 engine = create_engine(
-    CONFIG.sqlite_url + '?check_same_thread=False'  # hacky :(
+    CONFIG.sqlite_url # + '?check_same_thread=False'  # hacky :(
 )
 
 # circular imports

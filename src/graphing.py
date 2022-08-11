@@ -7,7 +7,7 @@ import matplotlib.dates as mdates
 from sqlmodel import select, Session
 
 from src.config import config as CONFIG
-print(__name__,CONFIG.sqlite_file_name)
+print(__name__,CONFIG.sqlite_url)
 from src.models import Temperature
 
 async def get_n_days(n_days,engine) -> dict[str, dict[str, int | float]]:

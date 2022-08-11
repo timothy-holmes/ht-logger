@@ -5,7 +5,7 @@ from requests import HTTPError
 from sqlmodel import select, Session
 
 from src.config import config as CONFIG
-print(__name__,CONFIG.sqlite_file_name)
+print(__name__,CONFIG.sqlite_url)
 from src.models import Temperature, Device
 from src.main import engine
 from src.db_helpers import add_items_to_db, get_last_updates

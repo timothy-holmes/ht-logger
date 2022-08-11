@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlmodel import Field, SQLModel
 
 from src.config import config as CONFIG
-print(__name__,CONFIG.sqlite_file_name)
+print(__name__,CONFIG.sqlite_url)
 
 class Temperature(SQLModel, table=True):
     id: int = Field(default=None, primary_key = True)

@@ -3,7 +3,7 @@ from os.path import isfile, join
 from datetime import datetime
 from typing import Optional
 
-from sqlmodel import Session, select
+from sqlmodel import SQLModel, Session, select
 from src.config import config as CONFIG
 from src.models import Temperature, Device
 
@@ -11,6 +11,9 @@ from src.models import Temperature, Device
     # yield engine
 
 # def migrate():
+
+def create_db_and_tables(engine):
+    SQLModel.metadata.create_all(engine)
 
 def add_items_to_db(items,engine) -> bool:
     with Session(engine) as session:
