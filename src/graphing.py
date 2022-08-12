@@ -7,10 +7,9 @@ import matplotlib.dates as mdates
 from sqlmodel import select, Session
 
 from src.config import config as CONFIG
-print(__name__,CONFIG.sqlite_url)
 from src.models import Temperature
 
-async def get_n_days(n_days,engine) -> dict[str, dict[str, int | float]]:
+async def get_n_days(n_days,engine) -> dict[str, list[dict[str, int | float]]]:
     """
     Queries and formats data from Temperature table for graphing.
 
@@ -32,12 +31,15 @@ async def get_n_days(n_days,engine) -> dict[str, dict[str, int | float]]:
     points = list(sorted(results, key=lambda p: p.timestamp))
     devices = set(p.device_id for p in points)
     return {
-        d: [{
+        d: [
+            {
                 'd': p.timestamp / 86400, # convert from seconds to days
                 't': p.temperature
             }
-            for p in points if p.device_id == d]
-            for d in devices}
+            for p in points if p.device_id == d
+        ]
+        for d in devices
+    }
 
 async def graph_n_days(dataset: dict[str, list[dict]]):
     """
@@ -46,7 +48,7 @@ async def graph_n_days(dataset: dict[str, list[dict]]):
     Parameter a dict with structure:
         {device1: [{d: datetime, t: temperature},{...}], ...}
 
-    Returns ByytesIO object containing plot in png format.
+    Returns BytesIO object containing plot in png format.
     """
     # set up plot, axes
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -89,6 +91,6 @@ async def graph_n_days(dataset: dict[str, list[dict]]):
 
     # save to memory
     buffer = BytesIO()
-    plt.savefig(buffer, format='png', dpi=300) # error BytesIO not accepted type is incorrect
+    plt.savefig(buffer, format='png', dpi=300) # ignore error BytesIO not accepted type is incorrect
     buffer.seek(0) # goes back to start of file
     return buffer

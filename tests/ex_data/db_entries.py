@@ -34,9 +34,9 @@ temperature_func = [
 ]
 
 timestamp = range(
-        datetime.timestamp(datetime.today(tz = CONFIG.tz)),
-        datetime.timestamp(datetime.now(tz=CONFIG.tz) + timedelta(hours=12)),
-        timedelta(minutes=30)
+        int(datetime.timestamp(datetime.now(tz=CONFIG.tz) - timedelta(hours=24))),
+        int(datetime.timestamp(datetime.now(tz=CONFIG.tz) - timedelta(minutes=96))),
+        48 * 60
     )
 
 def generate_temperatures():

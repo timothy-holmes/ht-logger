@@ -18,12 +18,14 @@ class ConfigData:
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
     }
     bom_update_interval: int = 10800 # 3 hours between updates
-    data_volume_path: str = os.env.get('HT_DATA_VOLUME_PATH') or './data'
+    data_volume_path: str = os.environ.get('HT_DATA_VOLUME_PATH') or './data'
     sqlite_db_filename: str = "database.db"
     tz: tzinfo = ZoneInfo("Australia/Melbourne")
+    uvicorn_port: int = int(os.environ.get('UVICORN_PORT',0)) or 12346
 
 class Config(ConfigData):
-    sqlite_db_path: str = os.path.abspath(os.path.join(data_volume_path,sqlite_db_filename))
-    sqlite_url: str = f"sqlite:///{sqlite_db_path}"
+    def __init__(cls):
+        cls.sqlite_db_path: str = os.path.abspath(os.path.join(cls.data_volume_path,cls.sqlite_db_filename))
+        cls.sqlite_url: str = f'sqlite:///{cls.sqlite_db_path}'
 
 config = Config()

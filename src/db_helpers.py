@@ -1,7 +1,6 @@
 import os, json
 from os.path import isfile, join
 from datetime import datetime
-from typing import Optional
 
 from sqlmodel import SQLModel, Session, select
 from src.config import config as CONFIG
@@ -19,7 +18,6 @@ def add_items_to_db(items,engine) -> bool:
     with Session(engine) as session:
         for item in items:
             session.add(item)
-            print(item)
         session.commit()
     return True
     
@@ -67,10 +65,10 @@ def get_last_update(device_id: str, engine) -> float:
         results: list[Temperature] = session.exec(query).all()
     return max([t.timestamp for t in results] + [0])
 
-def get_last_updates(engine, device_type: Optional[str]) -> dict[str, float]:
+def get_last_updates(engine, device_type: str = '') -> dict[str, float]:
     query = select(Device) # limit to device_id column only
     if device_type:
         query = query.where(Device.device_type == device_type)
     with Session(engine) as session:
         results: list[Device] = session.exec(query).all()
-    return {d.device_id: get_last_update(d.device_id) for d in results}
+    return {d.device_id: get_last_update(d.device_id, engine) for d in results}

@@ -33,13 +33,13 @@ Wait for the requests (droids) you're looking for... While waiting view chart on
 ## next TODO
 
 - DevOps!
-  - stop adding features!
-  - create 'working' version for current app
-    - create a test configuration that works on Windows
-      - draw process/architecture diagram
-      - database.db.test with sample data
-      - tests for more things
-      - fix things until working
+  - stop adding features! x
+  - create 'working' version for current app x
+    - create a test configuration that works on Windows x
+      - draw process/architecture diagram x
+      - database.db.test with sample data x
+      - tests for more things x
+      - fix things until working x
   - create automated testing environment for Linux
     - docker-compose
       - services
@@ -49,8 +49,6 @@ Wait for the requests (droids) you're looking for... While waiting view chart on
           - moves tested source code into app /src volume
           - app uvicorn reloads with new source code and runs migration
         - production app
-
-
 
 ## misc TODOs
 
