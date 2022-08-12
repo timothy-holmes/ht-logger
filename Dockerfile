@@ -12,6 +12,7 @@ COPY . ./
 # (maybe) display contents of workdir for debugging purposes
 RUN ls -R
 
+ENV PIP_CONFIG_FILE=pip.conf
 # get list of dependencies
 # RUN pip3 install pipreqs
 # RUN pipreqs --force
