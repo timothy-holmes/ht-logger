@@ -2,6 +2,9 @@ version: "3.8"
 
 services:
   app:
+    environment: 
+    - UVICORN_PORT=12346
+    - HT_DATA_VOLUME=/data
     build: .
     command: python ht-tracker.py
     ports:

@@ -8,5 +8,6 @@ if __name__ == '__main__':
         "src.main:app", 
         host = '0.0.0.0', 
         port=CONFIG.uvicorn_port, 
-        log_level="info"
+        log_level="info",
+        reload=True
     )

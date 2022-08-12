@@ -5,13 +5,8 @@ from tests.config import test_config as CONFIG
 
 devices = [
     {
-        'device_id': 'shellyht_f5dd', 
+        'device_id': 'shellyht-6BB646', 
         'friendly_name': 'Raelia', 
-        'device_type': 'ShellyHT', 
-    },
-    {
-        'device_id': 'shellyht_e651', 
-        'friendly_name': 'Outside', 
         'device_type': 'ShellyHT', 
     },
     {

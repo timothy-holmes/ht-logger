@@ -22,7 +22,7 @@ def convert_bom_timestamp(bom_timestamp: str):
 
 def update_bom_data(check_age: bool = True):
     timestamp_now = datetime.timestamp(datetime.now(tz = CONFIG.tz))
-    last_bom_updates = get_last_updates(engine=engine, device_type='bom_station')
+    last_bom_updates = get_last_updates(engine=engine, device_type='bom_json')
     for bom_station, last_update in last_bom_updates.items():
         if check_age and (timestamp_now - last_update > CONFIG.bom_update_interval):
             add_items_to_db(_get_bom_data(device_id = bom_station, from_when = last_update), engine)

@@ -17,7 +17,7 @@ engine = create_engine(
 )
 
 # circular imports
-from src.models import Temperature
+from src.models import Temperature, Device
 from src.bom_client import update_bom_data
 from src.graphing import get_n_days, graph_n_days
 from src.db_helpers import add_items_to_db, get_last_updates, create_db_and_tables, add_old_data_to_db
@@ -71,3 +71,7 @@ async def db_dump():
 def startup():
     create_db_and_tables(engine)
     add_old_data_to_db(engine)
+    with Session(engine) as session:
+        if len(session.exec(select(Device)).all()) == 0:
+            from tests.ex_data.db_entries import generate_devices:
+                 
