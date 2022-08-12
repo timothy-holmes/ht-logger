@@ -10,6 +10,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlmodel import create_engine, Session, select
 
 from src.config import config as CONFIG
+print(CONFIG.sqlite_db_path,flush=True)
 
 app = FastAPI()
 engine = create_engine(
