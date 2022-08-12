@@ -73,5 +73,5 @@ def startup():
     add_old_data_to_db(engine)
     with Session(engine) as session:
         if len(session.exec(select(Device)).all()) == 0:
-            from tests.ex_data.db_entries import generate_devices:
-                 
+            from tests.ex_data.db_entries import generate_devices
+            add_items_to_db(generate_devices(),engine)
