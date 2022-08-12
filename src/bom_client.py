@@ -22,13 +22,17 @@ def convert_bom_timestamp(bom_timestamp: str):
 
 def update_bom_data(check_age: bool = True):
     timestamp_now = datetime.timestamp(datetime.now(tz = CONFIG.tz))
+    with Session(engine) as session:
+        devices = session.exec(select(Device).where(Device.device_type == 'bom_json')).all()
+        bom_devices = [d.device_id for d in devices]
     last_bom_updates = get_last_updates(engine=engine, device_type='bom_json')
-    for bom_station, last_update in last_bom_updates.items():
+    for bom_device in bom_devices:
+        last_update = last_bom_updates.get(bom_device,0)
         if check_age and (timestamp_now - last_update > CONFIG.bom_update_interval):
-            add_items_to_db(_get_bom_data(device_id = bom_station, from_when = last_update), engine)
+            add_items_to_db(_get_bom_data(device_id = bom_device, from_when = last_update), engine)
         elif not check_age:
-            add_items_to_db(_get_bom_data(device_id = bom_station, from_when = last_update), engine)
-    return [last_bom_updates,get_last_updates(engine=engine, device_type='bom_station')]
+            add_items_to_db(_get_bom_data(device_id = bom_device, from_when = last_update), engine)
+    return [last_bom_updates,get_last_updates(engine=engine, device_type='bom_json')]
 
 def _get_bom_data(device_id: str, from_when: float):
     with Session(engine) as session:
