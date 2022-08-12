@@ -52,8 +52,8 @@ def engine():
 
 def pytest_sessionstart(session):
     # delete existing test db
-    if os.path.exists(CONFIG.sqlite_url):
-        os.remove(CONFIG.sqlite_url)
+    if os.path.exists(CONFIG.sqlite_db_path):
+        os.remove(CONFIG.sqlite_db_path)
 
     # create new test db with entries
     create_db_and_tables(db_engine)

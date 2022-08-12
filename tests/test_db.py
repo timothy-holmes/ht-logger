@@ -1,4 +1,3 @@
-from src.config import config as CONFIG
 from src.models import Temperature
 from src.db_helpers import add_items_to_db
 
